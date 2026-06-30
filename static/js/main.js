@@ -24,6 +24,25 @@ function toTitleCase(value) {
     return value.replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+// parseConcertDate turns a "DD-MM-YYYY" string (optionally prefixed with "*")
+// into a Date, so dates can be compared chronologically.
+function parseConcertDate(value) {
+    const [day, month, year] = value.replace("*", "").trim().split("-").map(Number);
+    return new Date(year, month - 1, day);
+}
+
+// sortDatesAscending returns the dates sorted oldest-first.
+function sortDatesAscending(dates) {
+    return [...dates].sort((a, b) => parseConcertDate(a) - parseConcertDate(b));
+}
+
+// earliestDate returns the oldest date in a list (used to order locations).
+function earliestDate(dates) {
+    return dates
+        .map(parseConcertDate)
+        .reduce((min, cur) => (cur < min ? cur : min));
+}
+
 function listMarkup(items, formatter) {
     if (!items || items.length === 0) {
         return "<p class=\"empty-state\">No data found.</p>";
@@ -43,10 +62,12 @@ function relationsMarkup(relations) {
         return "<p class=\"empty-state\">No relations found.</p>";
     }
 
+    entries.sort(([, a], [, b]) => earliestDate(a) - earliestDate(b));
+
     return entries.map(([location, dates]) => `
         <div class="relation-row">
             <strong>${formatLocation(location)}</strong>
-            <span>${dates.map((date) => date.replace("*", "")).join(", ")}</span>
+            <span>${sortDatesAscending(dates).map((date) => date.replace("*", "")).join(", ")}</span>
         </div>
     `).join("");
 }
@@ -117,6 +138,6 @@ if (artistHero) {
     const relationsOutput = document.querySelector("#relations-output");
 
     loadArtistDetail("locations", locationsOutput, (data) => listMarkup(data, formatLocation));
-    loadArtistDetail("dates", datesOutput, (data) => listMarkup(data));
+    loadArtistDetail("dates", datesOutput, (data) => listMarkup(sortDatesAscending(data)));
     loadArtistDetail("relations", relationsOutput, relationsMarkup);
 }

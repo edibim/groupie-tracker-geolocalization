@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Name}} | Groupie Tracker</title>
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/vendor/leaflet/leaflet.css">
     <script src="/static/js/main.js" defer></script>
+    <script src="/static/vendor/leaflet/leaflet.js" defer></script>
+    <script src="/static/js/map.js" defer></script>
 </head>
 <body>
     <header class="site-header">
@@ -71,6 +74,14 @@
                     </div>
                 </div>
             </section>
+        </section>
+
+        <section class="section-wrap">
+            <div class="section-title">
+                <h2>Concerts map</h2>
+            </div>
+            <div id="concert-map"></div>
+            <p class="map-caption">Concert locations in tour order.</p>
         </section>
     </main>
 </body>
