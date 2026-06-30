@@ -50,7 +50,7 @@ async function initConcertMap() {
             L.polyline(latlngs, { color: "#3b82f6", weight: 3, opacity: 0.7 }).addTo(map);
         }
 
-        // One coloured dot per concert: first = blue, last = green, rest = grey.
+        // One coloured dot per concert: first = red, last = green, rest = grey.
         places.forEach((place, i) => {
             let fillColor = "#777";
             if (i === places.length - 1) fillColor = "green";
@@ -66,6 +66,18 @@ async function initConcertMap() {
                 .bindPopup(`<strong>${place.address}</strong><br>${place.dates.join(", ")}`)
                 .addTo(map);
         });
+
+        // Legend explaining the marker colours.
+        const legend = L.control({ position: "bottomright" });
+        legend.onAdd = () => {
+            const div = L.DomUtil.create("div", "map-legend");
+            div.innerHTML =
+                '<span><i style="background: red"></i> First concert</span>' +
+                '<span><i style="background: green"></i> Last concert</span>' +
+                '<span><i style="background: #777"></i> Other</span>';
+            return div;
+        };
+        legend.addTo(map);
     } catch (error) {
         mapEl.insertAdjacentHTML(
             "afterend",
