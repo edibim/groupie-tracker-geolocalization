@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"log"
 	"net/http"
 	"sort"
 	"strconv"
@@ -53,7 +54,8 @@ func coordinatesHandler(w http.ResponseWriter, r *http.Request) {
 		address := geocode.Normalize(rawLocation)
 		point, err := geocoder(address)
 		if err != nil {
-			continue // skip locations we cannot geocode (full handling in M6)
+			log.Printf("geocode failed for %q: %v", address, err)
+			continue // skip locations we cannot geocode; the rest still render
 		}
 		coords = append(coords, concertCoordinate{
 			Address: address,

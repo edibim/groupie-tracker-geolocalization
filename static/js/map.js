@@ -36,6 +36,14 @@ async function initConcertMap() {
         }
         const places = await response.json();
 
+        if (places.length === 0) {
+            mapEl.insertAdjacentHTML(
+                "afterend",
+                '<p class="map-caption">No mappable concert locations for this artist.</p>'
+            );
+            return;
+        }
+
         // Draw the tour path connecting concerts in chronological order.
         const latlngs = places.map((place) => [place.lat, place.lng]);
         if (latlngs.length > 1) {
