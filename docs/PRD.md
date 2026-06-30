@@ -13,8 +13,9 @@ coordinates via **geocoding** and renders them as **map markers**, connected by
 a line in chronological order (tour path).
 
 The backend stays in **Go, standard library only**. Geocoding uses OpenStreetMap
-**Nominatim** (free, key-less); the map uses **Leaflet**, vendored locally so it
-works without internet access during the audit.
+**Nominatim** (free, key-less); the map uses **Leaflet**, vendored locally (the
+library loads without a CDN, though the map tiles are still served by
+OpenStreetMap and require internet).
 
 ## 2. Relationship to the base project
 
@@ -132,7 +133,8 @@ layer on top. Import paths use the module `groupie-tracker-geolocalization`.
 - **Performance:** coordinates are cached on disk; uncached geocoding is
   throttled but only happens once per location ever.
 - **Consistency:** match the base's package layout, naming, and routing style.
-- **Offline-safe audit:** Leaflet is vendored, not loaded from a CDN.
+- **No CDN dependency:** the Leaflet library is vendored, not loaded from a CDN
+  (map tiles are still served by OpenStreetMap and require internet).
 
 ## 7. Architecture
 
