@@ -1,14 +1,5 @@
 // Renders an artist's concert locations on a Leaflet map.
 
-// Point Leaflet's default marker icons at our vendored copies, otherwise the
-// markers fail to load (a well-known Leaflet gotcha).
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-    iconRetinaUrl: "/static/vendor/leaflet/images/marker-icon-2x.png",
-    iconUrl: "/static/vendor/leaflet/images/marker-icon.png",
-    shadowUrl: "/static/vendor/leaflet/images/marker-shadow.png",
-});
-
 async function initConcertMap() {
     const mapEl = document.querySelector("#concert-map");
     const hero = document.querySelector(".artist-hero");
@@ -45,12 +36,28 @@ async function initConcertMap() {
         }
         const places = await response.json();
 
-        places.forEach((place) => {
-            const marker = L.marker([place.lat, place.lng]);
-            marker.bindPopup(`<strong>${place.address}</strong><br>${place.dates.join(", ")}`);
-            marker.addTo(map);
+        // Draw the tour path connecting concerts in chronological order.
+        const latlngs = places.map((place) => [place.lat, place.lng]);
+        if (latlngs.length > 1) {
+            L.polyline(latlngs, { color: "#3b82f6", weight: 3, opacity: 0.7 }).addTo(map);
+        }
+
+        // One coloured dot per concert: first = blue, last = green, rest = grey.
+        places.forEach((place, i) => {
+            let fillColor = "#777";
+            if (i === places.length - 1) fillColor = "green";
+            if (i === 0) fillColor = "red";
+
+            L.circleMarker([place.lat, place.lng], {
+                radius: 7,
+                weight: 2,
+                color: "#fff",
+                fillColor: fillColor,
+                fillOpacity: 1,
+            })
+                .bindPopup(`<strong>${place.address}</strong><br>${place.dates.join(", ")}`)
+                .addTo(map);
         });
-        // Markers stay on the full-world view; the user can zoom in manually.
     } catch (error) {
         mapEl.insertAdjacentHTML(
             "afterend",
