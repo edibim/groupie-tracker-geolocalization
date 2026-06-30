@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groupie Tracker</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="/">Groupie Tracker</a>
+        <nav class="nav-links" aria-label="Main navigation">
+            <a href="/">Artists</a>
+            <a href="/artists">JSON</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Live music data</p>
+                <h1>Explore artists, albums, dates and tour stops.</h1>
+                <p>
+                    Browse the Groupie Tracker catalog and open any artist to see their
+                    members, first album and concert information.
+                </p>
+            </div>
+        </section>
+
+        <section class="section-wrap">
+            <div class="section-title">
+                <h2>Artists</h2>
+                <p><span id="artist-count">{{len .}}</span> artists shown from the API</p>
+            </div>
+
+            <form class="filter-panel" id="artist-filters" aria-label="Filter artists">
+                <label class="search-field">
+                    <span>Search</span>
+                    <input id="artist-search" type="search" placeholder="Search artists or members">
+                </label>
+
+                <label class="select-field">
+                    <span>Created</span>
+                    <select id="creation-filter">
+                        <option value="all">All years</option>
+                        <option value="before-1980">Before 1980</option>
+                        <option value="1980-1999">1980 - 1999</option>
+                        <option value="2000-2009">2000 - 2009</option>
+                        <option value="2010-plus">2010+</option>
+                    </select>
+                </label>
+
+                <label class="select-field">
+                    <span>Members</span>
+                    <select id="members-filter">
+                        <option value="all">Any size</option>
+                        <option value="solo">Solo</option>
+                        <option value="small">2 - 4</option>
+                        <option value="large">5+</option>
+                    </select>
+                </label>
+            </form>
+
+            <div class="artist-grid">
+                {{range .}}
+                <article class="artist-card" data-created="{{.CreationDate}}" data-members="{{len .Members}}" data-search="{{.Name}} {{range .Members}}{{.}} {{end}}">
+                    <a class="artist-link" href="/artist/{{.ID}}" aria-label="Open {{.Name}}">
+                        <img src="{{.Image}}" alt="{{.Name}}">
+                        <div class="artist-card-body">
+                            <h3>{{.Name}}</h3>
+                            <p>Since {{.CreationDate}}</p>
+                            <span>{{.FirstAlbum}}</span>
+                            <small>{{len .Members}} members</small>
+                        </div>
+                    </a>
+                </article>
+                {{else}}
+                <p class="empty-state">No artists are available right now.</p>
+                {{end}}
+            </div>
+            <p class="empty-state hidden" id="no-results">No artists match these filters.</p>
+        </section>
+    </main>
+</body>
+</html>

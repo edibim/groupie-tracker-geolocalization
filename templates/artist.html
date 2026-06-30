@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Name}} | Groupie Tracker</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/main.js" defer></script>
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="/">Groupie Tracker</a>
+        <nav class="nav-links" aria-label="Main navigation">
+            <a href="/">Artists</a>
+            <a href="/artists">JSON</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="artist-hero" data-artist-id="{{.ID}}">
+            <img class="artist-photo" src="{{.Image}}" alt="{{.Name}}">
+            <div class="artist-summary">
+                <a class="back-link" href="/">Back to artists</a>
+                <h1>{{.Name}}</h1>
+                <dl class="stats">
+                    <div>
+                        <dt>Created</dt>
+                        <dd>{{.CreationDate}}</dd>
+                    </div>
+                    <div>
+                        <dt>First album</dt>
+                        <dd>{{.FirstAlbum}}</dd>
+                    </div>
+                    <div>
+                        <dt>Members</dt>
+                        <dd>{{len .Members}}</dd>
+                    </div>
+                </dl>
+            </div>
+        </section>
+
+        <section class="section-wrap" aria-live="polite">
+            <section class="panel artist-info-board">
+                <div class="info-column">
+                    <h2>Members</h2>
+                    <ul class="simple-list">
+                        {{range .Members}}
+                        <li>{{.}}</li>
+                        {{end}}
+                    </ul>
+                </div>
+
+                <div class="info-column relations-column">
+                    <h2>Concert Dates & Locations</h2>
+                    <div id="relations-output">
+                        <p class="loading">Loading relations...</p>
+                    </div>
+                </div>
+
+                <div class="info-column">
+                    <h2>Dates</h2>
+                    <div id="dates-output">
+                        <p class="loading">Loading dates...</p>
+                    </div>
+                </div>
+
+                <div class="info-column">
+                    <h2>Locations</h2>
+                    <div id="locations-output">
+                        <p class="loading">Loading locations...</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+</body>
+</html>
