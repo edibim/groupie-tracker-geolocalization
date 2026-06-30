@@ -74,6 +74,7 @@ func RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/artist/{id}/locations", artistLocationsHandler)
 	mux.HandleFunc("/artist/{id}/dates", artistDatesHandler)
 	mux.HandleFunc("/artist/{id}/relations", artistRelationsHandler)
+	mux.HandleFunc("/artist/{id}/coordinates", coordinatesHandler)
 	mux.HandleFunc("/locations", locationsHandler)
 	mux.HandleFunc("/dates", datesHandler)
 	mux.HandleFunc("/relation", relationHandler)
