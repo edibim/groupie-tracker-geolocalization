@@ -9,7 +9,28 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 )
+
+// Nominatim's usage policy allows at most ~1 request per second. throttle()
+// enforces that spacing across all uncached lookups.
+var (
+	throttleInterval = time.Second
+	throttleMu       sync.Mutex
+	lastRequest      time.Time
+)
+
+// throttle blocks until at least throttleInterval has passed since the previous
+// request, then records the current time.
+func throttle() {
+	throttleMu.Lock()
+	defer throttleMu.Unlock()
+	if wait := throttleInterval - time.Since(lastRequest); wait > 0 {
+		time.Sleep(wait)
+	}
+	lastRequest = time.Now()
+}
 
 // nominatimURL is the geocoding endpoint. It is a var (not const) so tests can
 // point it at a fake server.
@@ -27,6 +48,8 @@ type nominatimResult struct {
 // Geocode resolves a normalized query (e.g. "Mainz, Germany") to coordinates
 // using the Nominatim service.
 func Geocode(query string) (lat, lng float64, err error) {
+	throttle() // respect Nominatim's ~1 request/second policy
+
 	endpoint := nominatimURL + "?" + url.Values{
 		"q":      {query},
 		"format": {"json"},

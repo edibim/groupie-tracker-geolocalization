@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestNormalize(t *testing.T) {
@@ -58,5 +59,39 @@ func TestGeocode(t *testing.T) {
 	}
 	if math.Abs(lng-8.2472526) > 0.0001 {
 		t.Errorf("lng = %v, want ~8.2472526", lng)
+	}
+}
+
+func TestGeocodeThrottlesRequests(t *testing.T) {
+	body, err := os.ReadFile("testdata/nominatim_mainz.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write(body)
+	}))
+	defer srv.Close()
+
+	old := nominatimURL
+	nominatimURL = srv.URL
+	defer func() { nominatimURL = old }()
+
+	// Small interval + reset so the test is fast and isolated.
+	oldInterval := throttleInterval
+	throttleInterval = 50 * time.Millisecond
+	lastRequest = time.Time{}
+	defer func() { throttleInterval = oldInterval }()
+
+	start := time.Now()
+	if _, _, err := Geocode("A"); err != nil {
+		t.Fatal(err)
+	}
+	if _, _, err := Geocode("B"); err != nil {
+		t.Fatal(err)
+	}
+	elapsed := time.Since(start)
+
+	if elapsed < throttleInterval {
+		t.Errorf("two calls took %v, want >= %v (throttle not applied)", elapsed, throttleInterval)
 	}
 }
