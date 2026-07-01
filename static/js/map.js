@@ -16,24 +16,23 @@ async function initConcertMap() {
         maxBoundsViscosity: 1.0,
         zoomSnap: 0, // allow a fractional zoom so the world fills the box snugly
     });
+
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "&copy; OpenStreetMap contributors",
         maxZoom: 19,
         noWrap: true,
     }).addTo(map);
 
-    // Fill the box edge-to-edge horizontally (the world spans the full width);
-    // top/bottom are cropped. World pixel width at zoom z is 256 * 2^z, so the
-    // zoom that fills the container width is log2(width / 256).
+    // Temporary world view while the concert locations are loading.
     const fillZoom = Math.log2(map.getSize().x / 256);
     map.setView([25, 0], fillZoom);
-    map.setMinZoom(fillZoom);
 
     try {
         const response = await fetch(`/artist/${artistID}/coordinates`);
         if (!response.ok) {
             throw new Error(`request failed: ${response.status}`);
         }
+
         const places = await response.json();
 
         if (places.length === 0) {
@@ -47,14 +46,24 @@ async function initConcertMap() {
         // Draw the tour path connecting concerts in chronological order.
         const latlngs = places.map((place) => [place.lat, place.lng]);
         if (latlngs.length > 1) {
-            L.polyline(latlngs, { color: "#3b82f6", weight: 3, opacity: 0.7 }).addTo(map);
+            L.polyline(latlngs, {
+                color: "#3b82f6",
+                weight: 3,
+                opacity: 0.7,
+            }).addTo(map);
         }
+
+        // Keep track of all marker positions so the map can automatically
+        // zoom and center to fit every concert location.
+        const bounds = L.latLngBounds();
 
         // One coloured dot per concert: first = red, last = green, rest = grey.
         places.forEach((place, i) => {
             let fillColor = "#777";
             if (i === places.length - 1) fillColor = "green";
             if (i === 0) fillColor = "red";
+
+            bounds.extend([place.lat, place.lng]);
 
             L.circleMarker([place.lat, place.lng], {
                 radius: 7,
@@ -67,8 +76,14 @@ async function initConcertMap() {
                 .addTo(map);
         });
 
+        // Automatically fit the map to include all concert locations.
+        map.fitBounds(bounds, {
+            padding: [40, 40],
+        });
+
         // Legend explaining the marker colours.
         const legend = L.control({ position: "bottomright" });
+
         legend.onAdd = () => {
             const div = L.DomUtil.create("div", "map-legend");
             div.innerHTML =
@@ -77,6 +92,7 @@ async function initConcertMap() {
                 '<span><i style="background: #777"></i> Other</span>';
             return div;
         };
+
         legend.addTo(map);
     } catch (error) {
         mapEl.insertAdjacentHTML(
