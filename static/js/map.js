@@ -60,8 +60,8 @@ async function initConcertMap() {
         // One coloured dot per concert: first = red, last = green, rest = grey.
         places.forEach((place, i) => {
             let fillColor = "#777";
-            if (i === places.length - 1) fillColor = "green";
-            if (i === 0) fillColor = "red";
+            if (i === places.length - 1) fillColor = "red";
+            if (i === 0) fillColor = "green";
 
             bounds.extend([place.lat, place.lng]);
 
@@ -87,8 +87,8 @@ async function initConcertMap() {
         legend.onAdd = () => {
             const div = L.DomUtil.create("div", "map-legend");
             div.innerHTML =
-                '<span><i style="background: red"></i> First concert</span>' +
-                '<span><i style="background: green"></i> Last concert</span>' +
+                '<span><i style="background: green"></i> First concert</span>' +
+                '<span><i style="background: red"></i> Last concert</span>' +
                 '<span><i style="background: #777"></i> Other</span>';
             return div;
         };

@@ -23,7 +23,7 @@
         <section class="artist-hero" data-artist-id="{{.ID}}">
             <img class="artist-photo" src="{{.Image}}" alt="{{.Name}}">
             <div class="artist-summary">
-                <a class="back-link" href="/">Back to artists</a>
+                <a class="back-link" href="/">↩ Back to artists</a>
                 <h1>{{.Name}}</h1>
                 <dl class="stats">
                     <div>
@@ -42,46 +42,51 @@
             </div>
         </section>
 
-        <section class="section-wrap" aria-live="polite">
-            <section class="panel artist-info-board">
-                <div class="info-column">
-                    <h2>Members</h2>
-                    <ul class="simple-list">
-                        {{range .Members}}
-                        <li>{{.}}</li>
-                        {{end}}
-                    </ul>
+        <section class="section-wrap artist-detail-wrap" aria-live="polite">
+            <div class="artist-info-panel">
+                <div class="section-title">
+                    <h2>Artist Info</h2>
                 </div>
-
-                <div class="info-column relations-column">
-                    <h2>Concert Dates & Locations</h2>
-                    <div id="relations-output">
-                        <p class="loading">Loading relations...</p>
+                <section class="panel artist-info-board">
+                    <div class="info-column">
+                        <h2>Members</h2>
+                        <ul class="simple-list">
+                            {{range .Members}}
+                            <li>{{.}}</li>
+                            {{end}}
+                        </ul>
                     </div>
-                </div>
 
-                <div class="info-column">
-                    <h2>Dates</h2>
-                    <div id="dates-output">
-                        <p class="loading">Loading dates...</p>
+                    <div class="info-column relations-column">
+                        <h2>Concert Dates & Locations</h2>
+                        <div id="relations-output">
+                            <p class="loading">Loading relations...</p>
+                        </div>
                     </div>
-                </div>
 
-                <div class="info-column">
-                    <h2>Locations</h2>
-                    <div id="locations-output">
-                        <p class="loading">Loading locations...</p>
+                    <div class="info-column">
+                        <h2>Dates</h2>
+                        <div id="dates-output">
+                            <p class="loading">Loading dates...</p>
+                        </div>
                     </div>
-                </div>
-            </section>
-        </section>
 
-        <section class="section-wrap">
-            <div class="section-title">
-                <h2>Concerts map</h2>
+                    <div class="info-column">
+                        <h2>Locations</h2>
+                        <div id="locations-output">
+                            <p class="loading">Loading locations...</p>
+                        </div>
+                    </div>
+                </section>
             </div>
-            <div id="concert-map"></div>
-            <p class="map-caption">Concert locations in tour order.</p>
+
+            <div class="artist-map-panel">
+                <div class="section-title">
+                    <h2>Concerts map</h2>
+                </div>
+                <div id="concert-map"></div>
+                <p class="map-caption">Concert locations in tour order.</p>
+            </div>
         </section>
     </main>
 </body>
