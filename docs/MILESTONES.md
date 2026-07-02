@@ -4,8 +4,11 @@
 > **groupie-tracker** base, so milestones cover only the geolocalization layer.
 > "Done" means: code compiles, `go test ./...` passes, and the exit criteria are
 > met.
+>
+> **Status: all milestones (M1–M7) completed as of 2026-07-02**, plus the
+> post-M7 enhancements listed at the end.
 
-## M1 — Bootstrap from the base
+## M1 — Bootstrap from the base ✅
 
 **Goal:** start from a working copy of the base project.
 
@@ -17,7 +20,7 @@
 and 404/405/500 pages all work, unchanged from the base.
 **Tests:** existing base tests stay green.
 
-## M2 — Geocoding package
+## M2 — Geocoding package ✅
 
 **Goal:** turn a text address into coordinates, throttled and cached.
 
@@ -32,7 +35,7 @@ call is served from cache with no network request.
 **Tests:** `geocode_test.go` (parse saved Nominatim fixtures from `testdata/`),
 `cache_test.go` (hit/miss/persist).
 
-## M3 — Coordinates endpoint
+## M3 — Coordinates endpoint ✅
 
 **Goal:** expose an artist's geocoded concerts as JSON.
 
@@ -48,7 +51,7 @@ call is served from cache with no network request.
 dates}]` sorted chronologically; bad id → 404; non-GET → 405.
 **Tests:** `handlers_test.go` — fields present, ordering correct, error codes.
 
-## M4 — Map UI
+## M4 — Map UI ✅
 
 **Goal:** show the markers on the artist page.
 
@@ -62,7 +65,7 @@ dates}]` sorted chronologically; bad id → 404; non-GET → 405.
 works with no internet (vendored Leaflet).
 **Tests:** covered by M3 endpoint tests (JS is exercised manually).
 
-## M5 — Tour path (bonus)
+## M5 — Tour path (bonus) ✅
 
 **Goal:** connect markers chronologically.
 
@@ -71,7 +74,7 @@ works with no internet (vendored Leaflet).
 
 **Exit criteria:** markers are joined by a line that follows concert date order.
 
-## M6 — Error handling & polish
+## M6 — Error handling & polish ✅
 
 **Goal:** geolocalization degrades gracefully.
 
@@ -85,7 +88,7 @@ simulated Nominatim outage does not crash or block the page.
 **Tests:** `handlers_test.go` — endpoint still returns resolved locations when
 some addresses fail.
 
-## M7 — Tests, docs & cleanup
+## M7 — Tests, docs & cleanup ✅
 
 **Goal:** ship-ready quality.
 
@@ -105,3 +108,16 @@ M1 → M2 → M3 → M4 → M5
 
 M6 starts once the map (M4) exists; M5 (bonus) can run in parallel with early
 M6 work.
+
+## Post-M7 enhancements ✅
+
+Shipped after the planned milestones:
+
+- On-map **legend** explaining the marker colours (green = first concert,
+  red = last, grey = others).
+- Marker **tooltips on hover** (city + concert dates, one per line) instead of
+  click-to-open popups.
+- **Travelling-light animation** along the tour path, showing the direction
+  from the first concert to the last.
+- Layout polish: the map sits beside the artist information, with responsive
+  fixes for smaller screens.

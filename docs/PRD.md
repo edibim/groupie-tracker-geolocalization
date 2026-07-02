@@ -1,6 +1,6 @@
 # Product Requirements Document — Groupie Tracker Geolocalization
 
-> Status: Draft · Last updated: 2026-06-30 · Owner: gtzimoka
+> Status: Implemented · Last updated: 2026-07-02 · Owner: gtzimoka
 
 ## 1. Overview
 
@@ -118,10 +118,18 @@ layer on top. Import paths use the module `groupie-tracker-geolocalization`.
 - `static/js/map.js` fetches `/artist/{id}/coordinates`, shows a loading state
   while it resolves, then drops one marker per location, fitting the map bounds
   to the markers.
+- Markers are colour-coded circle markers — **green** for the location of the
+  first concert, **red** for the last, grey for the rest — and an on-map legend
+  explains the colours.
+- Hovering over a marker shows a tooltip with the normalized address and the
+  location's concert dates, one per line (no click needed).
 
 ### FR-5 Tour path — bonus (new)
 - Draw a Leaflet polyline through the markers in the chronological order from
   FR-3, so the touring path is visible.
+- A second polyline overlays the path with a CSS dash-offset animation: a
+  travelling "light" that moves from the first concert towards the last,
+  making the tour direction visible.
 
 ## 6. Non-Functional Requirements
 
@@ -238,7 +246,9 @@ Table-driven unit tests for every package with logic; no network in tests.
 
 Delivery is broken into M1–M7. See [MILESTONES.md](MILESTONES.md).
 
-## 11. Open Questions
+## 11. Resolved Questions
 
 - Whether to commit a small pre-seeded `data/geocache.json` (covering the audit
-  artists) so the first demo needs no live Nominatim calls.
+  artists) so the first demo needs no live Nominatim calls — **decided: no**.
+  The cache is listed in `.gitignore` and regenerates at runtime; the first
+  visit per artist geocodes uncached locations at ~1 request/second.

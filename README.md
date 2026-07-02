@@ -10,9 +10,11 @@ The backend is written in **Go using only the standard library**.
 ## Features
 
 - Browse and search artists (inherited from the base project).
-- Per-artist concert **map** with one marker per location.
+- Per-artist concert **map** with one marker per location; hovering over a
+  marker shows the city and its concert dates (one per line) — no click needed.
 - **Tour path**: markers are joined by a line in chronological order — the first
-  concert is shown in **red**, the last in **green**.
+  concert is shown in **green**, the last in **red**, as explained by the on-map
+  legend — with a travelling-light animation showing the tour direction.
 - **Geocoding** via OpenStreetMap Nominatim, with an on-disk **cache** so repeat
   loads are instant and requests stay within Nominatim's usage policy.
 - Concert **dates** and **dates & locations** are listed in chronological order.
