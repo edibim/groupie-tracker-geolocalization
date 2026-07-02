@@ -72,7 +72,11 @@ async function initConcertMap() {
                 fillColor: fillColor,
                 fillOpacity: 1,
             })
-                .bindPopup(`<strong>${place.address}</strong><br>${place.dates.join(", ")}`)
+                    .bindTooltip(`<strong>${place.address}</strong><br>${place.dates.join(", ")}`, {
+                    direction: "top",
+                    offset: [0, -6],
+                })
+
                 .addTo(map);
         });
 
