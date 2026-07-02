@@ -298,7 +298,7 @@ p {
 .artist-detail-wrap {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(360px, 34vw);
-    align-items: stretch;
+    align-items: start;
     gap: 22px;
     width: calc(100% - 36px);
 }
