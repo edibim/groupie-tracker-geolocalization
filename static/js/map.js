@@ -51,6 +51,14 @@ async function initConcertMap() {
                 weight: 3,
                 opacity: 0.7,
             }).addTo(map);
+        // Overlay "light" that travels along the tour path.
+            L.polyline(latlngs, {
+                className: "tour-flow",
+                color: "#e0f2fe",
+                weight: 3,
+                opacity: 1,
+            }).addTo(map);
+
         }
 
         // Keep track of all marker positions so the map can automatically

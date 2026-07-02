@@ -484,3 +484,16 @@ p {
     border-radius: 50%;
     display: inline-block;
 }
+
+/* Travelling light on the tour path. */
+.tour-flow {
+    stroke-dasharray: 12 240;
+    animation: tour-flow 3s linear infinite;
+}
+
+@keyframes tour-flow {
+    to {
+        stroke-dashoffset: -252;
+    }
+}
+
