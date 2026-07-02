@@ -80,7 +80,7 @@ async function initConcertMap() {
                 fillColor: fillColor,
                 fillOpacity: 1,
             })
-                    .bindTooltip(`<strong>${place.address}</strong><br>${place.dates.join(", ")}`, {
+                    .bindTooltip(`<strong>${place.address}</strong><br>${place.dates.join("<br>")}`, {
                     direction: "top",
                     offset: [0, -6],
                 })
