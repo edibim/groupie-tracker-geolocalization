@@ -303,10 +303,13 @@ p {
     width: calc(100% - 36px);
 }
 
-.artist-info-panel,
-.artist-map-panel {
+.artist-info-panel {
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    /* grid-template-rows: auto 1fr; */
+    min-width: 0;
+}
+
+.artist-map-panel {
     min-width: 0;
 }
 
